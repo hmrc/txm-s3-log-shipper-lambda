@@ -4,7 +4,8 @@
             "type": "oozie",
             "path": [
                 "emr-logs\/%{EMR_CLUSTER:cluster}\/node\/%{EMR_NODE:node}\/applications\/oozie\/oozie.log.*.gz"
-            ]
+            ],
+            "strptime": "%Y-%m-%d %H:%M:%S,%f"
         }
     ]
 }

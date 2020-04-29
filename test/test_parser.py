@@ -1,3 +1,4 @@
+from datetime import datetime
 from pathlib import Path
 from typing import Tuple
 from unittest import TestCase
@@ -59,6 +60,14 @@ class LogParserSpec(TestCase):
 
         prs = pm[0]
 
-        match = prs.parse_log("2020-04-28 05:58:34,600  INFO StatusTransitService$StatusTransitRunnable:520 - SERVER["
-                              "ip-10-202- 31-224.eu-west-2.compute.internal] USER[-] GROUP[-] TOKEN[-] APP[-] JOB[-] "
-                              "ACTION[-] Released lock for [org.apache.oozie.service.StatusTransitService]")
+        match = prs.parse_log("".join(["2020-04-28 05:58:34,602  INFO StatusTransitService$StatusTransitRunnable:520 "
+                                       "- SERVER[ip-10-202-31-224.eu-west-2.compute.internal] USER[-] GROUP[-] "
+                                       "TOKEN[-] APP[-] JOB[-] ACTION[-] Released lock for ["
+                                       "org.apache.oozie.service.StatusTransitService]"]))
+
+        self.assertEqual(match['level'], 'INFO')
+        self.assertEqual(match['message'], "".join(["StatusTransitService$StatusTransitRunnable:520 - SERVER["
+                                                    "ip-10-202-31-224.eu-west-2.compute.internal] USER[-] GROUP[-] "
+                                                    "TOKEN[-] APP[-] JOB[-] ACTION[-] Released lock for ["
+                                                    "org.apache.oozie.service.StatusTransitService]"]))
+        self.assertEqual(match['timestamp'], datetime.strptime("2020-04-28T05:58:34.602", "%Y-%m-%dT%H:%M:%S.%f"))
