@@ -17,11 +17,11 @@ class ParserManager:
         with open(config_file.as_posix(), 'rb') as config_file:
             self._config: dict = json.load(config_file)
 
-        if "files" not in self.config:
+        if "files" not in self._config:
             raise ValueError("Config file format must contain top level \"files\" array")
 
         parsers: List[Parser] = list()
-        for file in self.config['files']:
+        for file in self._config['files']:
             parser: Parser = ParserManager.make_filter(file, groks_dir)
             parsers.append(parser)
 
@@ -35,16 +35,6 @@ class ParserManager:
         type: str = file['type']
         groks = [Grok(grok, custom_patterns_dir=groks_dir) for grok in file['path']]
         return Parser(Grok("%%{%s}" % type.upper(), custom_patterns_dir=groks_dir), groks)
-
-    @property
-    def config(self) -> dict:
-        return self._config
-
-    def get_log_path_grok_pattern(self, log_type: str) -> Optional[str]:
-        pass
-
-    def get_log_content_grok_pattern(self, log_type: str) -> str:
-        pass
 
     def get_parser(self, log_path: str):
         for flt in self._filters:
