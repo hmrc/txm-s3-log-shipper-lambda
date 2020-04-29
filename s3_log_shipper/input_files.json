@@ -1,0 +1,10 @@
+{
+    "files": [
+        {
+            "type": "oozie",
+            "path": [
+                "emr-logs\/%{EMR_CLUSTER:emr-cluster}\/node\/%{EMR_NODE:emr-node}\/applications\/oozie\/oozie.log.*.gz"
+            ]
+        }
+    ]
+}
