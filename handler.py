@@ -1,6 +1,6 @@
-import boto3
-import codecs
+import gzip
 
+import boto3
 from botocore.client import BaseClient
 from botocore.response import StreamingBody
 
@@ -22,5 +22,7 @@ def log_handler(event: dict, context) -> None:
 
         streaming_body: StreamingBody = get_object_response['Body']
 
-        for log in codecs.getreader('utf-8')(streaming_body):
+        for log in gzip.GzipFile(streaming_body, mode='rb'):
+            # TODO: Parse log line and convert to JSON
+            # TODO: Write JSON to redis
             pass
