@@ -18,7 +18,7 @@ class RedisLogShipperSpec(unittest.TestCase):
         self.parser_manager = Mock(ParserManager)
         client = boto3.client('s3')
         self.s3_client: Stubber = Stubber(client)
-        self.under_test = RedisLogShipper("http://127.0.0.1", self.parser_manager, self.s3_client.client)
+        self.under_test = RedisLogShipper("http://127.0.0.1:6379", self.parser_manager, self.s3_client.client)
 
     @patch('urllib.request.urlopen')
     def test_ship(self, mock_urlopen):
@@ -39,7 +39,10 @@ class RedisLogShipperSpec(unittest.TestCase):
         self.s3_client.activate()
         self.under_test.ship("foo", "bar.log")
 
-        # TODO: assertions
+        for call in mock_urlopen.call_args_list:
+            req, = call[0]
+            self.assertEqual(req.full_url, "http://127.0.0.1:6379")
+            self.assertIn("application/json", req.headers.values())
 
 
 if __name__ == '__main__':

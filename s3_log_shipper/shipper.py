@@ -2,10 +2,9 @@ import codecs
 import gzip
 import json
 import logging
+import urllib
 from contextlib import closing
-from http.client import HTTPResponse
-from urllib.parse import urlencode, ParseResult, urlparse
-from urllib.request import Request, urlopen
+from urllib.parse import ParseResult, urlparse
 
 from botocore.client import BaseClient
 from botocore.response import StreamingBody
@@ -54,14 +53,14 @@ class RedisLogShipper:
     def ship_to_redis(self, data: dict) -> None:
         redis_url: str = self.redis_endpoint.geturl()
 
-        request = Request(url=redis_url,
+        request = urllib.request.Request(url=redis_url,
                           data=json.dumps(data).encode("utf-8"),
                           headers={'content-type': 'application/json'})
 
         log.debug(f'Sending logs to Redis endpoint at [{redis_url}].')
 
         try:
-            with closing(urlopen(request)) as response:
+            with closing(urllib.request.urlopen(request)) as response:
                 log.debug(f"Response: ", response.getcode())
         except Exception as e:
             msg = f'Failed to send logs to Redis. Details: [{e}].'
