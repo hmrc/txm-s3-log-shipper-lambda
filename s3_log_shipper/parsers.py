@@ -44,7 +44,7 @@ class Parser:
         match = self.log_grok.match(log_entry)
 
         if 'timestamp' in match:
-            match['timestamp'] = datetime.strptime(match['timestamp'], self.strptime_pattern)
+            match['timestamp'] = datetime.strptime(match['timestamp'], self.strptime_pattern).isoformat()
 
         return match
 
