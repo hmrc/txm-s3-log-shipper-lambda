@@ -27,7 +27,7 @@ class LazyHandlerState:
     def get_log_parser(self) -> ParserManager:
 
         if self.log_parser is None:
-            parser_config_file = Path('./grok_patterns.conf')
+            parser_config_file = Path('./input_files.json')
 
             if not parser_config_file.exists() or not parser_config_file.is_file():
                 msg = f'Expected to find parser config file at {parser_config_file.absolute()}. No such file found.'
