@@ -1,6 +1,8 @@
 import codecs
 import gzip
+import json
 import logging
+from contextlib import closing
 from http.client import HTTPResponse
 from urllib.parse import urlencode, ParseResult, urlparse
 from urllib.request import Request, urlopen
@@ -36,7 +38,7 @@ class RedisLogShipper:
                 self.ship_to_redis(log_groks)
 
     def open_file_stream(self, bucket, key):
-        get_object_response = self.s3_client.get_object(bucket, key)
+        get_object_response = self.s3_client.get_object(Bucket=bucket, Key=key)
 
         is_gzipped = key.endswith(".gz")
 
@@ -50,16 +52,17 @@ class RedisLogShipper:
         return gzip.open(streaming_body, 'rb') if is_gzipped else codecs.getreader('utf-8')(streaming_body)
 
     def ship_to_redis(self, data: dict) -> None:
-        data: bytes = urlencode(data).encode()
         redis_url: str = self.redis_endpoint.geturl()
 
-        request = Request(url=redis_url, data=data)
+        request = Request(url=redis_url,
+                          data=json.dumps(data).encode("utf-8"),
+                          headers={'content-type': 'application/json'})
 
         log.debug(f'Sending logs to Redis endpoint at [{redis_url}].')
+
         try:
-            response: HTTPResponse = urlopen(request)
+            with closing(urlopen(request)) as response:
+                log.debug(f"Response: ", response.getcode())
         except Exception as e:
             msg = f'Failed to send logs to Redis. Details: [{e}].'
             log.error(msg)
-        finally:
-            response.close()
