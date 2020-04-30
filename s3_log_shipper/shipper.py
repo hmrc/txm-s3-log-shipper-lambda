@@ -2,7 +2,6 @@ import codecs
 import gzip
 import json
 import logging
-from collections import OrderedDict
 
 from botocore.client import BaseClient
 from botocore.response import StreamingBody
@@ -21,7 +20,7 @@ class RedisLogShipper:
         self.s3_client: BaseClient = s3_client
 
     def ship(self, bucket: str, key: str):
-        parser, path_groks = self.parser_manager.get_parser(key)
+        parser, path_groks = self.parser_manager.get_parser(f"{bucket}/{key}")
 
         if parser is None:
             raise KeyError(f"No parser configured to handle logs from {key}")
@@ -33,7 +32,7 @@ class RedisLogShipper:
                 if path_groks is not None:
                     log_groks.update(path_groks)
 
-                self.redis_endpoint.rpush("logstash", json.dumps(OrderedDict(log_groks)))
+                self.redis_endpoint.rpush("logstash", json.dumps(log_groks, sort_keys=True))
 
     def open_file_stream(self, bucket, key):
         get_object_response = self.s3_client.get_object(Bucket=bucket, Key=key)
@@ -47,4 +46,4 @@ class RedisLogShipper:
 
         streaming_body: StreamingBody = get_object_response['Body']
 
-        return gzip.open(streaming_body, 'rb') if is_gzipped else codecs.getreader('utf-8')(streaming_body)
+        return gzip.open(streaming_body, 'rt', encoding='utf-8') if is_gzipped else codecs.getreader('utf-8')(streaming_body)

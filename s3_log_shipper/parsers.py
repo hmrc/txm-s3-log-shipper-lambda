@@ -1,7 +1,7 @@
 import json
 import os
-from pathlib import Path
 from datetime import datetime
+from pathlib import Path
 from typing import Optional, List, Tuple
 
 from dataclasses import dataclass
@@ -16,6 +16,7 @@ class Parser:
     Encapsulates the grok patterns to identify a specific log file and parse the logs within it.
     """
 
+    type: str
     log_grok: Grok
     path_groks: List[Grok]
     strptime_pattern: str
@@ -45,6 +46,8 @@ class Parser:
 
         if 'timestamp' in match:
             match['timestamp'] = datetime.strptime(match['timestamp'], self.strptime_pattern).isoformat()
+
+        match['type'] = self.type
 
         return match
 
@@ -89,7 +92,7 @@ class ParserManager:
         type: str = file['type']
         strptime_pattern: str = file['strptime']
         groks = [Grok(grok, custom_patterns_dir=groks_dir) for grok in file['path']]
-        return Parser(Grok("%%{%s}" % type.upper(), custom_patterns_dir=groks_dir), groks, strptime_pattern)
+        return Parser(type, Grok("%%{%s}" % type.upper(), custom_patterns_dir=groks_dir), groks, strptime_pattern)
 
     def get_parser(self, log_path: str) -> Optional[Tuple[Parser, dict]]:
         """
