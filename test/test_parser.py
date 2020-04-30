@@ -1,4 +1,3 @@
-from datetime import datetime
 from pathlib import Path
 from typing import Tuple
 from unittest import TestCase
@@ -70,4 +69,4 @@ class LogParserSpec(TestCase):
                                                     "ip-10-202-31-224.eu-west-2.compute.internal] USER[-] GROUP[-] "
                                                     "TOKEN[-] APP[-] JOB[-] ACTION[-] Released lock for ["
                                                     "org.apache.oozie.service.StatusTransitService]"]))
-        self.assertEqual(match['timestamp'], datetime.strptime("2020-04-28T05:58:34.602", "%Y-%m-%dT%H:%M:%S.%f"))
+        self.assertEqual(match['timestamp'], "2020-04-28T05:58:34.602000")
