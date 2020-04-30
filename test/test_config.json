@@ -1,11 +1,11 @@
 {
-    "files": [
-        {
-            "type": "oozie",
-            "path": [
-                "emr-logs\/%{EMR_CLUSTER:cluster}\/node\/%{EMR_NODE:node}\/applications\/oozie\/oozie.log.*.gz"
-            ],
-            "strptime": "%Y-%m-%d %H:%M:%S,%f"
-        }
-    ]
+  "files": [
+    {
+      "type": "oozie",
+      "path": [
+        "%{GREEDYDATA:bucketname}/emr-logs\/%{GREEDYDATA:cluster}\/node\/%{GREEDYDATA:node}\/applications\/oozie\/oozie.log.*.gz"
+      ],
+      "strptime": "%Y-%m-%d %H:%M:%S,%f"
+    }
+  ]
 }

@@ -13,14 +13,17 @@ log: logging.Logger = logging.getLogger(__name__)
 
 
 def get_log_parser() -> ParserManager:
-    parser_config_file = Path(f'{os.path.dirname(__file__)}/input_files.json')
+    return ParserManager(config_file=get_config_file())
 
-    if not parser_config_file.exists() or not parser_config_file.is_file():
-        msg = f'Expected to find parser config file at {parser_config_file.absolute()}. No such file found.'
+
+def get_config_file() -> Path:
+    path = os.environ.get(key="CONFIG_FILE", default=f'{os.path.dirname(__file__)}/input_files.json')
+    file = Path(path)
+    if not file.exists() or not file.is_file():
+        msg = f'Expected to find parser config file at {file.absolute()}. No such file found.'
         log.error(msg)
         raise Exception(msg)
-
-    return ParserManager(config_file=parser_config_file)
+    return file
 
 
 def get_output_redis_host_from_environment():
