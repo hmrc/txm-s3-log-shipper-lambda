@@ -62,7 +62,7 @@ class ParserManager:
             self._config: dict = json.load(config_file)
 
         if "files" not in self._config:
-            raise ValueError("Config file format must contain top level \"files\" array")
+            raise ValueError("Config file format must contain top level \"files\" array.")
 
         parsers: List[Parser] = list()
         for file in self._config['files']:
@@ -82,6 +82,10 @@ class ParserManager:
         :param groks_dir: A directory to find additional grok patterns
         :return: A parser for the specified configuration
         """
+
+        if not all(['type', 'strptime', 'path'] for key in file):
+            raise ValueError(f"File entry requires 'type', 'strptime' and 'path' keys. Found:\n{file}")
+
         type: str = file['type']
         strptime_pattern: str = file['strptime']
         groks = [Grok(grok, custom_patterns_dir=groks_dir) for grok in file['path']]
