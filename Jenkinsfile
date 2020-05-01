@@ -2,17 +2,7 @@
 node {
   stage('git checkout') {
     step([$class: 'WsCleanup'])
-    final scmVars = checkout(
-      [$class: 'GitSCM',
-       branches: [[name: '*/master']],
-       doGenerateSubmoduleConfigurations: false,
-       extensions: [
-        [$class: 'CloneOption', depth: 0, noTags: false, reference: '', shallow: false]],
-       userRemoteConfigs: [
-         [credentialsId: 'hmrc-githubcom-service-infra-user-and-pat',
-          url: 'https://github.com/HMRC/txm-s3-log-shipper-lambda.git']]]
-    )
-    sh("echo ${scmVars.GIT_BRANCH} | cut -f 2 -d '/' > .git/_branch")
+    checkout(scm)
   }
   stage('Prepare python environment') {
     sh('make ci_docker_build')
