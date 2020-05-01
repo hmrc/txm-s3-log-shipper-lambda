@@ -18,10 +18,12 @@ class RedisLogShipperSpec(unittest.TestCase):
 
     def setUp(self) -> None:
         self.parser_manager = Mock(ParserManager)
-        client = boto3.client('s3')
+        client = boto3.client("s3")
         self.s3_client: Stubber = Stubber(client)
         self.redis_client = Mock(StrictRedis)
-        self.under_test = RedisLogShipper(self.redis_client, self.parser_manager, self.s3_client.client)
+        self.under_test = RedisLogShipper(
+            self.redis_client, self.parser_manager, self.s3_client.client
+        )
 
     def test_ship(self):
         parser = Mock(Parser)
@@ -32,9 +34,11 @@ class RedisLogShipperSpec(unittest.TestCase):
 
         parser.parse_log.return_value = path_groks
         self.parser_manager.get_parser.return_value = parser, log_groks
-        self.s3_client.add_response(method="get_object",
-                                    service_response={"Body": StreamingBody(io.BytesIO(b"HELLO"), 5)},
-                                    expected_params={"Bucket": ANY, "Key": ANY})
+        self.s3_client.add_response(
+            method="get_object",
+            service_response={"Body": StreamingBody(io.BytesIO(b"HELLO"), 5)},
+            expected_params={"Bucket": ANY, "Key": ANY},
+        )
         self.s3_client.activate()
         self.under_test.ship("foo", "bar.log")
 
@@ -47,5 +51,5 @@ class RedisLogShipperSpec(unittest.TestCase):
             self.assertEqual(json.loads(data), expected)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

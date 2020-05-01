@@ -17,10 +17,11 @@ def get_log_parser() -> ParserManager:
 
 
 def get_config_file() -> Path:
-    path = os.environ.get(key="CONFIG_FILE", default=f'{os.path.dirname(__file__)}/input_files.json')
+    default = f"{os.path.dirname(__file__)}/input_files.json"
+    path = os.environ.get("CONFIG_FILE", default)
     file = Path(path)
     if not file.exists() or not file.is_file():
-        msg = f'Expected to find parser config file at {file.absolute()}. No such file found.'
+        msg = f"Expected to find parser config file at {file.absolute()}. No such file found."
         log.error(msg)
         raise Exception(msg)
     return file
@@ -28,23 +29,25 @@ def get_config_file() -> Path:
 
 def get_output_redis_host_from_environment():
     try:
-        return os.environ['OUTPUT_REDIS_HOST']
+        return os.environ["OUTPUT_REDIS_HOST"]
     except KeyError as e:
-        raise Exception('env variable is not found: {}'.format(e))
+        raise Exception("env variable is not found: {}".format(e))
 
 
 def get_output_redis_port_from_environment():
     try:
-        return os.environ['OUTPUT_REDIS_PORT']
+        return os.environ["OUTPUT_REDIS_PORT"]
     except KeyError as e:
-        raise Exception('env variable is not found: {}'.format(e))
+        raise Exception("env variable is not found: {}".format(e))
 
 
 S3_CLIENT = boto3.client("s3")
 PARSER_MANAGER = get_log_parser()
-REDIS = redis.StrictRedis(host=get_output_redis_host_from_environment(),
-                          port=int(get_output_redis_port_from_environment()),
-                          db=0)
+REDIS = redis.StrictRedis(
+    host=get_output_redis_host_from_environment(),
+    port=int(get_output_redis_port_from_environment()),
+    db=0,
+)
 SHIPPER: RedisLogShipper = RedisLogShipper(REDIS, PARSER_MANAGER, S3_CLIENT)
 
 

@@ -1,6 +1,7 @@
 from dataclasses import dataclass
-from typing import Any, List, TypeVar, Type, cast, Callable
 from datetime import datetime
+from typing import Any, List, TypeVar, Type, cast, Callable
+
 import dateutil.parser
 
 T = TypeVar("T")
@@ -35,7 +36,7 @@ class RequestParameters:
     source_ip_address: str
 
     @staticmethod
-    def from_dict(obj: Any) -> 'RequestParameters':
+    def from_dict(obj: Any) -> "RequestParameters":
         assert isinstance(obj, dict)
         source_ip_address = from_str(obj.get("sourceIPAddress"))
         return RequestParameters(source_ip_address)
@@ -52,7 +53,7 @@ class ResponseElements:
     x_amz_id_2: str
 
     @staticmethod
-    def from_dict(obj: Any) -> 'ResponseElements':
+    def from_dict(obj: Any) -> "ResponseElements":
         assert isinstance(obj, dict)
         x_amz_request_id = from_str(obj.get("x-amz-request-id"))
         x_amz_id_2 = from_str(obj.get("x-amz-id-2"))
@@ -70,7 +71,7 @@ class ErIdentity:
     principal_id: str
 
     @staticmethod
-    def from_dict(obj: Any) -> 'ErIdentity':
+    def from_dict(obj: Any) -> "ErIdentity":
         assert isinstance(obj, dict)
         principal_id = from_str(obj.get("principalId"))
         return ErIdentity(principal_id)
@@ -88,7 +89,7 @@ class Bucket:
     arn: str
 
     @staticmethod
-    def from_dict(obj: Any) -> 'Bucket':
+    def from_dict(obj: Any) -> "Bucket":
         assert isinstance(obj, dict)
         name = from_str(obj.get("name"))
         owner_identity = ErIdentity.from_dict(obj.get("ownerIdentity"))
@@ -111,7 +112,7 @@ class Object:
     sequencer: str
 
     @staticmethod
-    def from_dict(obj: Any) -> 'Object':
+    def from_dict(obj: Any) -> "Object":
         assert isinstance(obj, dict)
         key = from_str(obj.get("key"))
         size = from_int(obj.get("size"))
@@ -136,7 +137,7 @@ class S3:
     object: Object
 
     @staticmethod
-    def from_dict(obj: Any) -> 'S3':
+    def from_dict(obj: Any) -> "S3":
         assert isinstance(obj, dict)
         s3_schema_version = from_str(obj.get("s3SchemaVersion"))
         configuration_id = from_str(obj.get("configurationId"))
@@ -166,7 +167,7 @@ class Record:
     s3: S3
 
     @staticmethod
-    def from_dict(obj: Any) -> 'Record':
+    def from_dict(obj: Any) -> "Record":
         assert isinstance(obj, dict)
         event_version = from_str(obj.get("eventVersion"))
         event_source = from_str(obj.get("eventSource"))
@@ -177,8 +178,17 @@ class Record:
         request_parameters = RequestParameters.from_dict(obj.get("requestParameters"))
         response_elements = ResponseElements.from_dict(obj.get("responseElements"))
         s3 = S3.from_dict(obj.get("s3"))
-        return Record(event_version, event_source, aws_region, event_time, event_name, user_identity,
-                      request_parameters, response_elements, s3)
+        return Record(
+            event_version,
+            event_source,
+            aws_region,
+            event_time,
+            event_name,
+            user_identity,
+            request_parameters,
+            response_elements,
+            s3,
+        )
 
     def to_dict(self) -> dict:
         result: dict = {}
@@ -188,7 +198,9 @@ class Record:
         result["eventTime"] = self.event_time.isoformat()
         result["eventName"] = from_str(self.event_name)
         result["userIdentity"] = to_class(ErIdentity, self.user_identity)
-        result["requestParameters"] = to_class(RequestParameters, self.request_parameters)
+        result["requestParameters"] = to_class(
+            RequestParameters, self.request_parameters
+        )
         result["responseElements"] = to_class(ResponseElements, self.response_elements)
         result["s3"] = to_class(S3, self.s3)
         return result
@@ -199,7 +211,7 @@ class S3Event:
     records: List[Record]
 
     @staticmethod
-    def from_dict(obj: Any) -> 'S3Event':
+    def from_dict(obj: Any) -> "S3Event":
         assert isinstance(obj, dict)
         records = from_list(Record.from_dict, obj.get("Records"))
         return S3Event(records)

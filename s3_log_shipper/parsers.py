@@ -1,10 +1,10 @@
 import json
 import os
+from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
 from typing import Optional, List, Tuple
 
-from dataclasses import dataclass
 from pygrok import Grok
 
 import s3_log_shipper
@@ -44,10 +44,12 @@ class Parser:
         """
         match = self.log_grok.match(log_entry)
 
-        if 'timestamp' in match:
-            match['timestamp'] = datetime.strptime(match['timestamp'], self.strptime_pattern).isoformat()
+        if "timestamp" in match:
+            match["timestamp"] = datetime.strptime(
+                match["timestamp"], self.strptime_pattern
+            ).isoformat()
 
-        match['type'] = self.type
+        match["type"] = self.type
 
         return match
 
@@ -58,17 +60,21 @@ class ParserManager:
     and encapsulate the logic to parse the useful information out of the entries in those log files.
     """
 
-    def __init__(self, config_file: Path, groks_dir=f'{os.path.dirname(s3_log_shipper.__file__)}/groks') -> None:
+    def __init__(
+        self,
+        config_file: Path,
+        groks_dir=f"{os.path.dirname(s3_log_shipper.__file__)}/groks",
+    ) -> None:
         self._config_file: Path = config_file
 
-        with open(config_file.as_posix(), 'rb') as config_file:
-            self._config: dict = json.load(config_file)
+        with open(config_file.as_posix(), "rb") as cf:
+            self._config: dict = json.load(cf)
 
         if "files" not in self._config:
-            raise ValueError("Config file format must contain top level \"files\" array.")
+            raise ValueError('Config file format must contain top level "files" array.')
 
         parsers: List[Parser] = list()
-        for file in self._config['files']:
+        for file in self._config["files"]:
             parser: Parser = ParserManager.make_parser(file, groks_dir)
             parsers.append(parser)
 
@@ -86,13 +92,20 @@ class ParserManager:
         :return: A parser for the specified configuration
         """
 
-        if not all(['type', 'strptime', 'path'] for key in file):
-            raise ValueError(f"File entry requires 'type', 'strptime' and 'path' keys. Found:\n{file}")
+        if not all(["type", "strptime", "path"] for key in file):
+            raise ValueError(
+                f"File entry requires 'type', 'strptime' and 'path' keys. Found:\n{file}"
+            )
 
-        type: str = file['type']
-        strptime_pattern: str = file['strptime']
-        groks = [Grok(grok, custom_patterns_dir=groks_dir) for grok in file['path']]
-        return Parser(type, Grok("%%{%s}" % type.upper(), custom_patterns_dir=groks_dir), groks, strptime_pattern)
+        type: str = file["type"]
+        strptime_pattern: str = file["strptime"]
+        groks = [Grok(grok, custom_patterns_dir=groks_dir) for grok in file["path"]]
+        return Parser(
+            type,
+            Grok("%%{%s}" % type.upper(), custom_patterns_dir=groks_dir),
+            groks,
+            strptime_pattern,
+        )
 
     def get_parser(self, log_path: str) -> Optional[Tuple[Parser, dict]]:
         """

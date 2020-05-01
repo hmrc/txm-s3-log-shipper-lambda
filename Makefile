@@ -71,8 +71,8 @@ typechecking: setup
 
 security_checks: setup
 	poetry run safety check
-	poetry run bandit ./handler.py
-	poetry run bandit -r ./s3_log_shipper
+	poetry run bandit --skip B101 ./handler.py
+	poetry run bandit --skip B101 -r ./s3_log_shipper
 
 test: setup typechecking  ## Run tests
 	find . -type f -name '*.pyc' -delete
