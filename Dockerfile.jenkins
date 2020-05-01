@@ -1,4 +1,4 @@
-FROM python:3.8.2
+FROM artefacts.tax.service.gov.uk/python-hello-world:latest
 
 # allow user and source root to be passed as args at default to sensibles
 ARG APP_USER=jenkins
