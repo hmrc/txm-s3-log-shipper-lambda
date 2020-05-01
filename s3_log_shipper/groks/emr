@@ -1,6 +1,1 @@
-EMR_CLUSTER .*
-EMR_NODE .*
-MESSAGE .*
-MILLIS \d{3}
-OOZIE_DATETIME .*
-OOZIE %{OOZIE_DATETIME:timestamp}\s{2}%{LOGLEVEL:level}\s%{MESSAGE:message}
+OOZIE %{GREEDYDATA:timestamp}\s{2}%{GREEDYDATA:level}\s%{GREEDYDATA:message}
