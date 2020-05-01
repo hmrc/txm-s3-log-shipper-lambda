@@ -1,4 +1,4 @@
-FROM artefacts.tax.service.gov.uk/python-hello-world:latest
+FROM 727065427295.dkr.ecr.eu-west-2.amazonaws.com/txm-infra-tests:latest
 
 # allow user and source root to be passed as args at default to sensibles
 ARG APP_USER=jenkins
