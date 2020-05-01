@@ -1,3 +1,6 @@
+import os
+
+
 def stub_event(bucket, key, record_count=1) -> dict:
     return {
         'Records': [
@@ -41,3 +44,7 @@ def stub_record(bucket, key) -> dict:
             }
         }
     }
+
+
+def test_config_file():
+    return f'{os.path.dirname(__file__)}/test_config.json'

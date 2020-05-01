@@ -1,1 +1,1 @@
-OOZIE %{GREEDYDATA:timestamp}\s{2}%{GREEDYDATA:level}\s%{GREEDYDATA:message}
+OOZIE %{GREEDYDATA:timestamp}\s{2}%{LOGLEVEL:level}\s%{GREEDYDATA:message}
