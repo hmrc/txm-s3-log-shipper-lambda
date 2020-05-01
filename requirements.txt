@@ -1,4 +1,0 @@
-redis
-botocore
-boto3==1.12.47
-pygrok

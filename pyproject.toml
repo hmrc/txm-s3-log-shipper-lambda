@@ -9,13 +9,12 @@ name = "artifactory"
 url = "https://artefacts.tax.service.gov.uk/artifactory/api/pypi/pips/simple/"
 
 [tool.poetry.dependencies]
-python = "3.7.7"
+python = "^3.8"
 boto3 = "^1.12.13"
 aws-lambda-logging = "^0.1.1"
 pygrok = "^1.0.0"
 
 [tool.poetry.dev-dependencies]
-python = "3.7.7"
 boto3 = "^1.12.13"
 aws-lambda-logging = "^0.1.1"
 pygrok = "^1.0.0"
