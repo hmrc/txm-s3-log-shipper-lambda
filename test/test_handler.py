@@ -49,7 +49,7 @@ class LogHandlerSpec(TestCase):
             "type": "oozie",
             "level": "INFO",
             "message": log_str.split("INFO ")[1],
-            "timestamp": "2020-04-28T05:58:34.602000",
+            "@timestamp": "2020-04-28T05:58:34.602000",
         }
 
         od = json.dumps(expected, sort_keys=True)

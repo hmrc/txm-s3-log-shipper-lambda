@@ -49,6 +49,9 @@ class Parser:
                 match["timestamp"], self.strptime_pattern
             ).isoformat()
 
+            # Rename for elasticsearch
+            match["@timestamp"] = match.pop("timestamp")
+
         match["type"] = self.type
 
         return match

@@ -59,4 +59,4 @@ class LogParserSpec(TestCase):
                 ]
             ),
         )
-        self.assertEqual(match["timestamp"], "2020-04-28T05:58:34.602000")
+        self.assertEqual(match["@timestamp"], "2020-04-28T05:58:34.602000")
