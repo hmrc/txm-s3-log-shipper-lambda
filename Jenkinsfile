@@ -1,44 +1,25 @@
 #!/usr/bin/env groovy
-pipeline {
-  agent {
-        label 'commonslave'
+node('commonslave') {
+  stage('git checkout') {
+    step([$class: 'WsCleanup'])
+    checkout(scm)
   }
-  stages {
-      stage('git checkout') {
-        steps {
-            step([$class: 'WsCleanup'])
-            checkout(scm)
-        }
-      }
-      stage('Prepare python environment') {
-        steps {
-            sh('make ci_docker_build')
-        }
-      }
-      stage('setup') {
-        steps {
-            sh('make ci_setup')
-        }
-      }
-      stage('test') {
-        steps {
-            sh('make ci_test')
-        }
-      }
-      stage('security') {
-        steps {
-            sh('make ci_security_checks')
-        }
-      }
-      stage('package') {
-        steps {
-            sh('make ci_package')
-        }
-      }
-      stage('publish') {
-        steps {
-            sh('make ci_publish')
-        }
-      }
+  stage('Prepare python environment') {
+    sh('make ci_docker_build')
+  }
+  stage('setup') {
+    sh('make ci_setup')
+  }
+  stage('test') {
+    sh('make ci_test')
+  }
+  stage('security') {
+    sh('make ci_security_checks')
+  }
+  stage('package') {
+    sh('make ci_package')
+  }
+  stage('publish') {
+    sh('make ci_publish')
   }
 }
