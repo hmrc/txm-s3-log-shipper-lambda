@@ -1,4 +1,4 @@
-FROM 727065427295.dkr.ecr.eu-west-2.amazonaws.com/txm-infra-tests:latest
+FROM 727065427295.dkr.ecr.eu-west-2.amazonaws.com/lambda-build:latest
 
 # allow user and source root to be passed as args at default to sensibles
 ARG APP_USER=jenkins
