@@ -5,26 +5,40 @@ pipeline {
   }
   stages {
       stage('git checkout') {
-        step([$class: 'WsCleanup'])
-        checkout(scm)
+        steps {
+            step([$class: 'WsCleanup'])
+            checkout(scm)
+        }
       }
       stage('Prepare python environment') {
-        sh('make ci_docker_build')
+        steps {
+            sh('make ci_docker_build')
+        }
       }
       stage('setup') {
-        sh('make ci_setup')
+        steps {
+            sh('make ci_setup')
+        }
       }
       stage('test') {
-        sh('make ci_test')
+        steps {
+            sh('make ci_test')
+        }
       }
       stage('security') {
-        sh('make ci_security_checks')
+        steps {
+            sh('make ci_security_checks')
+        }
       }
       stage('package') {
-        sh('make ci_package')
+        steps {
+            sh('make ci_package')
+        }
       }
       stage('publish') {
-        sh('make ci_publish')
+        steps {
+            sh('make ci_publish')
+        }
       }
   }
 }
