@@ -99,7 +99,7 @@ publish:  ## Upload Lambda package and hash to S3
 	done
 
 ci_docker_build: check_docker
-	docker build --build-arg APP_USER_ID=`id -u` --build-arg APP_GROUP_ID=`id -g` -t python-build-env -f Dockerfile.jenkins .
+	docker build --build-arg PROJECT_ROOT=`pwd` --build-arg APP_USER_ID=`id -u` --build-arg APP_GROUP_ID=`id -g` -t python-build-env -f Dockerfile.jenkins .
 
 ci_setup: check_docker
 	docker run -v `pwd`:/src --workdir /src python-build-env make clean setup
