@@ -1,1 +1,3 @@
 OOZIE %{GREEDYDATA:timestamp}\s{2}%{LOGLEVEL:level}\s%{GREEDYDATA:message}
+SPARKHISTORY %{GREEDYDATA:timestamp}\s%{LOGLEVEL:level}\s%{GREEDYDATA:message}
+LIVY %{GREEDYDATA:timestamp}\s%{LOGLEVEL:level}\s%{GREEDYDATA:message}

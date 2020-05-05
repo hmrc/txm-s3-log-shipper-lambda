@@ -1,3 +1,4 @@
+import csv
 import gzip
 import json
 import os
@@ -22,35 +23,29 @@ class LogHandlerSpec(TestCase):
     )
     @patch("redis.StrictRedis", autospec=True)
     def test_log_handler_happy_path(self, redis_client) -> None:
-        fn = "emr-logs/j-2QN8WF3UJZKK3/node/i-0c08a7e99b9985c73/applications/oozie/oozie.log-2020-04-28-05.gz"
-        log_str = "".join(
-            [
-                "2020-04-28 05:58:34,602  INFO StatusTransitService$StatusTransitRunnable:520 "
-                "- SERVER[ip-10-202-31-224.eu-west-2.compute.internal] USER[-] GROUP[-] "
-                "TOKEN[-] APP[-] JOB[-] ACTION[-] Released lock for ["
-                "org.apache.oozie.service.StatusTransitService]"
-            ]
-        )
-        log = gzip.compress(log_str.encode("utf-8"))
+        with open(
+            f"{os.path.dirname(__file__)}/sample_logs.csv", "rt"
+        ) as sample_logs_file:
+            for line in csv.reader(sample_logs_file, delimiter="|"):
+                path: str = line[0]
+                log = line[1]
+                expected = json.loads(line[2])
 
-        s3 = boto3.resource("s3")
-        s3.create_bucket(Bucket="foo-bucket")
-        s3.Object("foo-bucket", fn).put(Body=log)
+                log = gzip.compress(log.encode("utf-8"))
 
-        from handler import log_handler
+                first_slash = path.index("/")
+                bucket = path[:first_slash]
+                rest = 1 + first_slash
+                path = path[rest:]
 
-        event: dict = stub_event("foo-bucket", fn)
-        log_handler(event=event, context=Mock())
+                s3 = boto3.resource("s3")
+                s3.create_bucket(Bucket=bucket)
+                s3.Object(bucket, path).put(Body=log)
 
-        expected = {
-            "bucketname": "foo-bucket",
-            "cluster": "j-2QN8WF3UJZKK3",
-            "node": "i-0c08a7e99b9985c73",
-            "type": "oozie",
-            "level": "INFO",
-            "message": log_str.split("INFO ")[1],
-            "@timestamp": "2020-04-28T05:58:34.602000",
-        }
+                from handler import log_handler
 
-        od = json.dumps(expected, sort_keys=True)
-        redis_client().rpush.assert_called_with("logstash", od)
+                event: dict = stub_event(bucket, path)
+                log_handler(event=event, context=Mock())
+
+                od = json.dumps(expected, sort_keys=True)
+                redis_client().rpush.assert_called_with("logstash", od)

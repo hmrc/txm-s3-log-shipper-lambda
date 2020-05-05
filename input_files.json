@@ -6,6 +6,20 @@
         "%{GREEDYDATA:bucketname}/emr-logs\/%{GREEDYDATA:cluster}\/node\/%{GREEDYDATA:node}\/applications\/oozie\/oozie.log.*.gz"
       ],
       "strptime": "%Y-%m-%d %H:%M:%S,%f"
+    },
+    {
+      "type": "sparkhistory",
+      "path": [
+        "%{GREEDYDATA:bucketname}/emr-logs\/%{GREEDYDATA:cluster}\/node\/%{GREEDYDATA:node}\/applications\/spark\/spark-history-server.*.gz"
+      ],
+      "strptime": "%d-%m-%y %H:%M:%S"
+    },
+    {
+      "type": "livy",
+      "path": [
+        "%{GREEDYDATA:bucketname}/emr-logs\/%{GREEDYDATA:cluster}\/node\/%{GREEDYDATA:node}\/applications\/livy\/livy-livy-server.out*.gz"
+      ],
+      "strptime": "%y/%m/%d %H:%M:%S"
     }
   ]
 }
