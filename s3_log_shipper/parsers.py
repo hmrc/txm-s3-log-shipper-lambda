@@ -21,7 +21,7 @@ class Parser:
     path_groks: List[Grok]
     strptime_pattern: str
 
-    def match_path(self, log_path) -> Optional[dict]:
+    def match_path(self, log_path: str) -> Optional[dict]:
         """
         Attempts to match a log path using the path grok expressions
         :param log_path: the log path to test
@@ -36,7 +36,7 @@ class Parser:
 
         return {key: value for d in dicts for key, value in d.items()}
 
-    def parse_log(self, log_entry) -> Optional[dict]:
+    def parse_log(self, log_entry: str) -> Optional[dict]:
         """
         Attempts to parse the log entry using the log grok expression
         :param log_entry: the log entry to test
@@ -87,7 +87,7 @@ class ParserManager:
         return getattr(obj, self.name)
 
     @staticmethod
-    def make_parser(file: dict, groks_dir) -> Parser:
+    def make_parser(file: dict, groks_dir: str) -> Parser:
         """
         Builds a parser from a config file entry and a directory of extra grok expressions.
         :param file: A single `file` element from the array within the config file.
