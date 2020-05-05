@@ -16,8 +16,8 @@ class LogHandlerSpec(TestCase):
     @patch.dict(
         os.environ,
         {
-            "OUTPUT_REDIS_HOST": "localhost",
-            "OUTPUT_REDIS_PORT": "6579",
+            "REDIS_HOST": "localhost",
+            "REDIS_PORT": "6579",
             "CONFIG_FILE": test_config_file(),
         },
     )

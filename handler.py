@@ -29,14 +29,14 @@ def get_config_file() -> Path:
 
 def get_output_redis_host_from_environment():
     try:
-        return os.environ["OUTPUT_REDIS_HOST"]
+        return os.environ["REDIS_HOST"]
     except KeyError as e:
         raise Exception("env variable is not found: {}".format(e))
 
 
 def get_output_redis_port_from_environment():
     try:
-        return os.environ["OUTPUT_REDIS_PORT"]
+        return os.environ["REDIS_PORT"]
     except KeyError as e:
         raise Exception("env variable is not found: {}".format(e))
 
