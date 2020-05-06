@@ -82,6 +82,7 @@ clean:  ## Delete virtualenv
 	rm -rf ./.venv
 
 package: setup check_openssl  ## Create Lambda .zip and hash file
+	find *.py s3_log_shipper/*.py -exec chmod +x {} \; # Set executable perms
 	zip ./${LAMBDA_NAME}.zip ./handler.py input_files.json
 	zip -r ./${LAMBDA_NAME}.zip ./s3_log_shipper/
 	mkdir -p pip_lambda_packages
