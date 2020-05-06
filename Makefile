@@ -97,9 +97,6 @@ publish:  ## Upload Lambda package and hash to S3
 	for env in ${ENVIRONMENTS}; do \
 		aws s3 cp ${LAMBDA_NAME}.zip s3://${BUCKET_NAME}-$${env}/${LAMBDA_NAME}.zip --acl=bucket-owner-full-control ;\
 		aws s3 cp ${LAMBDA_NAME}.zip.base64sha256 s3://${BUCKET_NAME}-$${env}/${LAMBDA_NAME}.zip.base64sha256 --content-type text/plain --acl=bucket-owner-full-control ;\
-
-		aws s3 cp ${LAMBDA_NAME}.zip s3://${BUCKET_NAME}-$${env}/${LAMBDA_NAME}-lambda.zip --acl=bucket-owner-full-control ;\
-		aws s3 cp ${LAMBDA_NAME}.zip.base64sha256 s3://${BUCKET_NAME}-$${env}/${LAMBDA_NAME}-lambda.zip.base64sha256 --content-type text/plain --acl=bucket-owner-full-control ;\
 	done
 
 ci_docker_build: check_docker
