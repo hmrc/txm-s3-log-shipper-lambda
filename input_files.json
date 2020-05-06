@@ -12,7 +12,7 @@
       "path": [
         "%{GREEDYDATA:bucketname}/emr-logs\/%{GREEDYDATA:cluster}\/node\/%{GREEDYDATA:node}\/applications\/spark\/spark-history-server.*.gz"
       ],
-      "strptime": "%d-%m-%y %H:%M:%S"
+      "strptime": "%y/%m/%d %H:%M:%S"
     },
     {
       "type": "livy",
