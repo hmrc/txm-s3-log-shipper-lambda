@@ -82,12 +82,12 @@ clean:  ## Delete virtualenv
 	rm -rf ./.venv
 
 package: setup check_openssl  ## Create Lambda .zip and hash file
-	find *.py s3_log_shipper/*.py -exec chmod +x {} \; # Set executable perms
-	zip ./${LAMBDA_NAME}.zip ./handler.py input_files.json
-	zip -r ./${LAMBDA_NAME}.zip ./s3_log_shipper/
 	mkdir -p pip_lambda_packages
-	poetry export -f requirements.txt > ./requirements.txt --without-hashes
+	poetry export -f requirements.txt > ./requirements.txt
 	pip install -t pip_lambda_packages -r ./requirements.txt
+
+	cp -R ./{handler.py,input_files.json,s3_log_shipper/} pip_lambda_packages
+	chmod -R 777 ./pip_lambda_packages/ # AWS Lambda needs very loose permissions
 	cd pip_lambda_packages && zip -r ../${LAMBDA_NAME}.zip .
 	openssl dgst -sha256 -binary ${LAMBDA_NAME}.zip | openssl enc -base64 > ${LAMBDA_NAME}.zip.base64sha256
 	rm -rf pip_lambda_packages
@@ -97,6 +97,9 @@ publish:  ## Upload Lambda package and hash to S3
 	for env in ${ENVIRONMENTS}; do \
 		aws s3 cp ${LAMBDA_NAME}.zip s3://${BUCKET_NAME}-$${env}/${LAMBDA_NAME}.zip --acl=bucket-owner-full-control ;\
 		aws s3 cp ${LAMBDA_NAME}.zip.base64sha256 s3://${BUCKET_NAME}-$${env}/${LAMBDA_NAME}.zip.base64sha256 --content-type text/plain --acl=bucket-owner-full-control ;\
+
+		aws s3 cp ${LAMBDA_NAME}.zip s3://${BUCKET_NAME}-$${env}/${LAMBDA_NAME}-lambda.zip --acl=bucket-owner-full-control ;\
+		aws s3 cp ${LAMBDA_NAME}.zip.base64sha256 s3://${BUCKET_NAME}-$${env}/${LAMBDA_NAME}-lambda.zip.base64sha256 --content-type text/plain --acl=bucket-owner-full-control ;\
 	done
 
 ci_docker_build: check_docker
