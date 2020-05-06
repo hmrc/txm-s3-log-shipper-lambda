@@ -82,8 +82,8 @@ clean:  ## Delete virtualenv
 	rm -rf ./.venv
 
 package: setup check_openssl  ## Create Lambda .zip and hash file
-	zip ./${LAMBDA_NAME}.zip ./handler.py
-	zip ./${LAMBDA_NAME}.zip ./s3_log_shipper
+	zip ./${LAMBDA_NAME}.zip ./handler.py input_files.json
+	zip -r ./${LAMBDA_NAME}.zip ./s3_log_shipper/
 	mkdir -p pip_lambda_packages
 	poetry export -f requirements.txt > ./requirements.txt --without-hashes
 	pip install -t pip_lambda_packages -r ./requirements.txt
