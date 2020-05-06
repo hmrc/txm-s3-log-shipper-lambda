@@ -2,6 +2,7 @@ import logging
 import os
 from pathlib import Path
 
+import aws_lambda_logging
 import boto3
 import redis
 
@@ -52,10 +53,13 @@ SHIPPER: RedisLogShipper = RedisLogShipper(REDIS, PARSER_MANAGER, S3_CLIENT)
 
 
 def log_handler(event: dict, context) -> None:
+    aws_lambda_logging.setup(level='DEBUG')
+    log.info(event)
     s3_event: S3Event = S3Event.from_dict(event)
 
     for record in s3_event.records:
         bucket = record.s3.bucket.name
         key = record.s3.object.key
 
+        log.info(f"Processing {bucket}/{key}")
         SHIPPER.ship(bucket, key)

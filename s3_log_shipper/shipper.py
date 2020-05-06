@@ -38,6 +38,9 @@ class RedisLogShipper:
             raise KeyError(f"No parser configured to handle logs from {key}")
 
         with self.open_file_stream(bucket, key) as log_file:
+
+            written = 0
+
             for line in log_file:
 
                 log_groks: Optional[Dict[Any, Any]] = parser.parse_log(line)
@@ -52,6 +55,10 @@ class RedisLogShipper:
                 self.redis_endpoint.rpush(
                     "logstash", json.dumps(log_groks, sort_keys=True)
                 )
+
+                written = written + 1
+
+            log.info(f"Wrote {written} lines to elasticache from {bucket}/{key}")
 
     def open_file_stream(self, bucket, key):
         get_object_response = self.s3_client.get_object(Bucket=bucket, Key=key)
