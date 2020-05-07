@@ -114,7 +114,7 @@ class ParserManager:
             strptime_pattern,
         )
 
-    def get_parser(self, log_path: str) -> Optional[Tuple[Parser, dict]]:
+    def get_parser(self, log_path: str) -> Optional[Tuple[Parser, Optional[dict]]]:
         """
         Retrieves a parser for a given log path
         :param log_path: The path to the log file

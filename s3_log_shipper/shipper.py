@@ -25,9 +25,9 @@ class RedisLogShipper:
         self.s3_client: BaseClient = s3_client
 
     def ship(self, bucket: str, key: str):
-        maybe_parser: Optional[Tuple[Parser, dict]] = self.parser_manager.get_parser(
-            f"{bucket}/{key}"
-        )
+        maybe_parser: Optional[
+            Tuple[Parser, Optional[dict]]
+        ] = self.parser_manager.get_parser(f"{bucket}/{key}")
 
         if maybe_parser is None:
             raise ValueError(f"Parser not found for {bucket}/{key}")
