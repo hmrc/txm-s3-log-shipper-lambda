@@ -6,6 +6,7 @@ target
 lib_managed
 tmp
 .history
+.pytest_cache
 dist
 /.idea
 /*.iml
@@ -17,9 +18,13 @@ dist
 /RUNNING_PID
 /.settings
 *.iws
+__pycache__
 node_modules/
 npm-debug.log
+venv
+.venv
+.mypy_cache
+.vscode
+.coverage
 yarn-debug.log
 yarn-error.log
-
-    
