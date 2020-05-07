@@ -13,7 +13,7 @@ from s3_log_shipper.shipper import RedisLogShipper
 log: logging.Logger = logging.getLogger(__name__)
 
 
-def get_log_parser() -> ParserManager:
+def get_parser_manager() -> ParserManager:
     return ParserManager(config_file=get_config_file())
 
 
@@ -43,7 +43,7 @@ def get_output_redis_port_from_environment():
 
 
 S3_CLIENT = boto3.client("s3")
-PARSER_MANAGER = get_log_parser()
+PARSER_MANAGER = get_parser_manager()
 REDIS = redis.StrictRedis(
     host=get_output_redis_host_from_environment(),
     port=int(get_output_redis_port_from_environment()),
