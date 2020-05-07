@@ -1,3 +1,4 @@
 OOZIE %{GREEDYDATA:timestamp}\s{2}%{LOGLEVEL:level}\s%{GREEDYDATA:message}
 SPARKHISTORY %{GREEDYDATA:timestamp}\s%{LOGLEVEL:level}\s%{GREEDYDATA:message}
 LIVY %{GREEDYDATA:timestamp}\s%{LOGLEVEL:level}\s%{GREEDYDATA:message}
+LIVYREQUESTS %{IPV4:ip}\s-\s-\s\[%{GREEDYDATA:timestamp}\]\s"%{WORD:method}\s\/%{UNIXPATH:uri}\sHTTP\/1.1"\s%{INT:status}\s%{INT:contentlength}

@@ -20,6 +20,13 @@
         "%{GREEDYDATA:bucketname}/emr-logs\/%{GREEDYDATA:cluster}\/node\/%{GREEDYDATA:node}\/applications\/livy\/livy-livy-server.out*.gz"
       ],
       "strptime": "%y/%m/%d %H:%M:%S"
+    },
+    {
+      "type": "livy-requests",
+      "path": [
+        "%{GREEDYDATA:bucketname}/emr-logs\/%{GREEDYDATA:cluster}\/node\/%{GREEDYDATA:node}\/applications\/livy\/*.request.log.gz"
+      ],
+      "strptime": "%d/%b/%Y:%H:%M:%S"
     }
   ]
 }

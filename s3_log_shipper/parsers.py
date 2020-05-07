@@ -103,9 +103,13 @@ class ParserManager:
         type: str = file["type"]
         strptime_pattern: str = file["strptime"]
         groks = [Grok(grok, custom_patterns_dir=groks_dir) for grok in file["path"]]
+
+        # Grok patterns don't support hyphenation
+        type_grok = "%%{%s}" % type.upper().replace("-", "")
+
         return Parser(
             type,
-            Grok("%%{%s}" % type.upper(), custom_patterns_dir=groks_dir),
+            Grok(type_grok, custom_patterns_dir=groks_dir),
             groks,
             strptime_pattern,
         )
