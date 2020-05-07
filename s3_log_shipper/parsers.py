@@ -108,7 +108,7 @@ class ParserManager:
         groks = [Grok(grok, custom_patterns_dir=groks_dir) for grok in file["path"]]
 
         if "grok" in file:
-            grok_name = file['grok']
+            grok_name = file["grok"]
         else:
             # Guess grok from type name...
             # Grok patterns don't support hyphenation
