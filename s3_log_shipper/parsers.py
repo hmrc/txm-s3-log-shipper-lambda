@@ -44,6 +44,9 @@ class Parser:
         """
         match = self.log_grok.match(log_entry)
 
+        if match is None:
+            return None
+
         if "timestamp" in match:
             match["timestamp"] = datetime.strptime(
                 match["timestamp"], self.strptime_pattern
@@ -104,12 +107,16 @@ class ParserManager:
         strptime_pattern: str = file["strptime"]
         groks = [Grok(grok, custom_patterns_dir=groks_dir) for grok in file["path"]]
 
-        # Grok patterns don't support hyphenation
-        type_grok = "%%{%s}" % type.upper().replace("-", "")
+        if "grok" in file:
+            grok_name = file["grok"]
+        else:
+            # Guess grok from type name...
+            # Grok patterns don't support hyphenation
+            grok_name = "%%{%s}" % type.upper().replace("-", "")
 
         return Parser(
             type,
-            Grok(type_grok, custom_patterns_dir=groks_dir),
+            Grok(grok_name, custom_patterns_dir=groks_dir),
             groks,
             strptime_pattern,
         )

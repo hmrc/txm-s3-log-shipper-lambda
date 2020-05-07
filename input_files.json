@@ -8,7 +8,7 @@
       "strptime": "%Y-%m-%d %H:%M:%S,%f"
     },
     {
-      "type": "sparkhistory",
+      "type": "spark-history",
       "path": [
         "%{GREEDYDATA:bucketname}/emr-logs\/%{GREEDYDATA:cluster}\/node\/%{GREEDYDATA:node}\/applications\/spark\/spark-history-server.*.gz"
       ],
@@ -17,7 +17,7 @@
     {
       "type": "livy",
       "path": [
-        "%{GREEDYDATA:bucketname}/emr-logs\/%{GREEDYDATA:cluster}\/node\/%{GREEDYDATA:node}\/applications\/livy\/livy-livy-server.out*.gz"
+        "%{GREEDYDATA:bucketname}/emr-logs\/%{GREEDYDATA:cluster}\/node\/%{GREEDYDATA:node}\/applications\/livy\/livy-livy-server.out.*.gz"
       ],
       "strptime": "%y/%m/%d %H:%M:%S"
     },
@@ -27,6 +27,30 @@
         "%{GREEDYDATA:bucketname}/emr-logs\/%{GREEDYDATA:cluster}\/node\/%{GREEDYDATA:node}\/applications\/livy\/.*.request.log.gz"
       ],
       "strptime": "%d/%b/%Y:%H:%M:%S %z"
+    },
+    {
+      "type": "yarn-resource-manager",
+      "path": [
+        "%{GREEDYDATA:bucketname}/emr-logs\/%{GREEDYDATA:cluster}\/node\/%{GREEDYDATA:node}\/applications\/hadoop-yarn\/yarn-yarn-resourcemanager-ip-.*.log.*.gz"
+      ],
+      "grok": "%{YARN}",
+      "strptime": "%Y-%m-%d %H:%M:%S,%f"
+    },
+    {
+      "type": "yarn-proxy-server",
+      "path": [
+        "%{GREEDYDATA:bucketname}/emr-logs\/%{GREEDYDATA:cluster}\/node\/%{GREEDYDATA:node}\/applications\/hadoop-yarn\/yarn-yarn-proxyserver-ip-.*.log.*.gz"
+      ],
+      "grok": "%{YARN}",
+      "strptime": "%Y-%m-%d %H:%M:%S,%f"
+    },
+    {
+      "type": "yarn-timeline-server",
+      "path": [
+        "%{GREEDYDATA:bucketname}/emr-logs\/%{GREEDYDATA:cluster}\/node\/%{GREEDYDATA:node}\/applications\/hadoop-yarn\/yarn-yarn-timelineserver-ip-.*.log.*.gz"
+      ],
+      "grok": "%{YARN}",
+      "strptime": "%Y-%m-%d %H:%M:%S,%f"
     }
   ]
 }
