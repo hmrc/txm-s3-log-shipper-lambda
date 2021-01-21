@@ -53,7 +53,7 @@ SHIPPER: RedisLogShipper = RedisLogShipper(REDIS, PARSER_MANAGER, S3_CLIENT)
 
 
 def log_handler(event: dict, context) -> None:
-    aws_lambda_logging.setup(level="DEBUG")
+    aws_lambda_logging.setup(level="INFO")
     log.info(event)
     s3_event: S3Event = S3Event.from_dict(event)
 
