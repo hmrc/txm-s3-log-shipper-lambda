@@ -70,7 +70,7 @@ typechecking: setup
 	poetry run mypy ./s3_log_shipper
 
 security_checks: setup
-	poetry run safety check
+	poetry run safety check -i 38414 -i 38369 -i 39253 -i 39319 -i 39252 -i 38932
 	poetry run bandit --skip B101 ./handler.py
 	poetry run bandit --skip B101 -r ./s3_log_shipper
 
